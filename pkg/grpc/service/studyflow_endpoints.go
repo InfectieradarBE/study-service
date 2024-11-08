@@ -29,11 +29,9 @@ func (s *studyServiceServer) EnterStudy(ctx context.Context, req *api.EnterStudy
 		return nil, status.Error(codes.InvalidArgument, "missing argument")
 	}
 
-	hasPermission := token_checks.CheckIfAnyRolesInToken(req.Token, []string{constants.USER_ROLE_RESEARCHER, constants.USER_ROLE_ADMIN})
+	isAdmin := token_checks.CheckIfAnyRolesInToken(req.Token, []string{constants.USER_ROLE_ADMIN})
 
-	err := utils.CheckIfProfileIDinToken(req.Token, req.ProfileId)
-
-	if !hasPermission && err != nil {
+	if !isAdmin && utils.CheckIfProfileIDinToken(req.Token, req.ProfileId) != nil {
 		s.SaveLogEvent(req.Token.InstanceId, req.Token.Id, loggingAPI.LogEventType_SECURITY, constants.LOG_EVENT_WRONG_PROFILE_ID, "enter study:"+req.ProfileId)
 		return nil, status.Error(codes.Internal, "permission denied")
 	}

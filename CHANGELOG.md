@@ -1,11 +1,5 @@
 # Changelog
 
-## [v1.8.1] - 2024-11-08
-
-### Changed
-
-- Allow authorized requests to add new participants to a study without requiring a matching token id
-
 ## [v1.8.0] - 2024-11-06
 
 ### Changed
@@ -15,6 +9,7 @@
 - add new Study Expressions `sum` and `neg` for arithmetic operations
 - add new study expression `getLastSubmissionDate`
 - add `MapToKey` in SurveyItemResponse to map confidential reponse to another key
+- Allow authorized requests to add new participants to a study without requiring a matching token id
 
 ## [v1.7.5] - 2024-08-13
 

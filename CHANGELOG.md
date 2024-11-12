@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.8.1] - 2024-11-08
+
+### Changed
+
+- Allow authorized requests to add new participants to a study without requiring a matching token id
+
 ## [v1.8.0] - 2024-11-06
 
 ### Changed

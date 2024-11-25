@@ -30,6 +30,7 @@ func (s *studyServiceServer) EnterStudy(ctx context.Context, req *api.EnterStudy
 	}
 
 	isAdmin := token_checks.CheckIfAnyRolesInToken(req.Token, []string{constants.USER_ROLE_ADMIN})
+	s.SaveLogEvent(req.Token.InstanceId, req.Token.Id, loggingAPI.LogEventType_LOG, "isAdminCheck", fmt.Sprintf("%v", isAdmin))
 	isOwner := s.HasRoleInStudy(req.Token.InstanceId, req.StudyKey, req.Token.Id, []string{types.STUDY_ROLE_OWNER}) == nil
 
 	if !isAdmin && !isOwner && utils.CheckIfProfileIDinToken(req.Token, req.ProfileId) != nil {

@@ -30,7 +30,6 @@ func (s *studyServiceServer) EnterStudy(ctx context.Context, req *api.EnterStudy
 	}
 
 	isAdmin := token_checks.CheckIfAnyRolesInToken(req.Token, []string{constants.USER_ROLE_ADMIN})
-	s.SaveLogEvent(req.Token.InstanceId, req.Token.Id, loggingAPI.LogEventType_LOG, "isAdminCheck", fmt.Sprintf("%v", isAdmin))
 	isOwner := s.HasRoleInStudy(req.Token.InstanceId, req.StudyKey, req.Token.Id, []string{types.STUDY_ROLE_OWNER}) == nil
 
 	if !isAdmin && !isOwner && utils.CheckIfProfileIDinToken(req.Token, req.ProfileId) != nil {
@@ -616,7 +615,10 @@ func (s *studyServiceServer) LeaveStudy(ctx context.Context, req *api.LeaveStudy
 		return nil, status.Error(codes.InvalidArgument, "missing argument")
 	}
 
-	if err := utils.CheckIfProfileIDinToken(req.Token, req.ProfileId); err != nil {
+	isAdmin := token_checks.CheckIfAnyRolesInToken(req.Token, []string{constants.USER_ROLE_ADMIN})
+	isOwner := s.HasRoleInStudy(req.Token.InstanceId, req.StudyKey, req.Token.Id, []string{types.STUDY_ROLE_OWNER}) == nil
+
+	if !isAdmin && !isOwner && utils.CheckIfProfileIDinToken(req.Token, req.ProfileId) != nil {
 		s.SaveLogEvent(req.Token.InstanceId, req.Token.Id, loggingAPI.LogEventType_SECURITY, constants.LOG_EVENT_WRONG_PROFILE_ID, "leave study:"+req.ProfileId)
 		return nil, status.Error(codes.Internal, "permission denied")
 	}
